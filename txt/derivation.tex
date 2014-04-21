@@ -116,7 +116,7 @@ We may then substitute these into their respective equations so that:
 
 These systems may be rewritten into the following matrix equations:
 
-\begin{align}
+\begin{align*}
 \begin{bmatrix}
     2+2r   & -2r    & \dots  & 0 \\
     -r     & 2+2r   & \dots  & 0 \\
@@ -125,11 +125,11 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & -2r    & 2+2r
 \end{bmatrix}
 \begin{bmatrix}
-    f_1^{j+1} \\
-    f_2^{j+1} \\
-    f_3^{j+1} \\
+    U_1^{j+1} \\
+    U_2^{j+1} \\
+    U_3^{j+1} \\
     \vdots    \\
-    f_n^{j+1}
+    U_n^{j+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
@@ -140,10 +140,17 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & 2r     & 2-2r
 \end{bmatrix}
 \begin{bmatrix}
+    U_1^{j} \\
+    U_2^{j} \\
+    U_3^{j} \\
+    \vdots  \\
+    U_n^{j}
+\end{bmatrix} + 2k
+\begin{bmatrix}
     f_1^{j} \\
     f_2^{j} \\
     f_3^{j} \\
-    \vdots    \\
+    \vdots  \\
     f_n^{j}
 \end{bmatrix} \\[10pt]
 \begin{bmatrix}
@@ -154,11 +161,11 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & -2s    & 2+2s
 \end{bmatrix}
 \begin{bmatrix}
-    g_1^{j+1} \\
-    g_2^{j+1} \\
-    g_3^{j+1} \\
+    V_1^{j+1} \\
+    V_2^{j+1} \\
+    V_3^{j+1} \\
     \vdots    \\
-    g_n^{j+1}
+    V_n^{j+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
@@ -169,10 +176,17 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & 2s     & 2-2s
 \end{bmatrix}
 \begin{bmatrix}
+    V_1^{j} \\
+    V_2^{j} \\
+    V_3^{j} \\
+    \vdots  \\
+    V_n^{j}
+\end{bmatrix} + 2k
+\begin{bmatrix}
     g_1^{j} \\
     g_2^{j} \\
     g_3^{j} \\
-    \vdots    \\
+    \vdots  \\
     g_n^{j}
 \end{bmatrix}
-\end{align}
+\end{align*}
