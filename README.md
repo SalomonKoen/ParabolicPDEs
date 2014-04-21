@@ -1,6 +1,8 @@
 ParabolicPDEs
 =============
 
+[![Gitter chat](https://badges.gitter.im/MichaelHatherly/ParabolicPDEs.png)](https://gitter.im/MichaelHatherly/ParabolicPDEs)
+
 Finite differences project. MAPM312
 
 All the different tasks that need completing for this project are listed
