@@ -5,44 +5,42 @@ from \eqref{eq:prey}. A similar argument may be used to show the stability of
 the Crank-Nicolson method using the equation from \eqref{eq:pred}.
 
 \begin{align} \label{eq:stab_initial}
-\frac{U_m^{n+1} - U_m^n}{\tau} &=
+\frac{U_n^{m+1} - U_n^m}{k} &=
     \frac{D_u}{2} \left(
-        \frac{U_{m-1}^{n+1} - 2 U_{m}^{n+1} + U_{m+1}^{n+1}}{h^2} +
-        \frac{U_{m-1}^{n} - 2 U_{m}^{n} + U_{m+1}^{n}}{h^2}
+        \frac{U_{n-1}^{m+1} - 2 U_{n}^{m+1} + U_{n+1}^{m+1}}{h^2} +
+        \frac{U_{n-1}^{m} - 2 U_{n}^{m} + U_{n+1}^{m}}{h^2}
     \right)
 \end{align}
 
-We then substitute $U_m^n = \xi^n e^{ikmh}$ and rearrange the terms in
+We then substitute $U_n^m = \xi^m e^{iknh}$ and rearrange the terms in
 \eqref{eq:stab_initial} such that:
 
 % Can't split large brackets over multiple lines so we create dummy brackets.
 \begin{align} \label{eq:stab_subbed}
 \begin{split}
-\xi^{n+1} e^{ikmh} - \xi^{n} e^{ikmh} =
-    \frac{D_u \tau}{2h^2} \left(
-        \xi^{n+1} e^{ik(m+1)h} + \xi^{n} e^{ik(m+1)h} \right. \\
-        - 2 \xi^{n+1} e^{ikmh} - 2 \xi^{n} e^{ikmh} \\
-        \left. + \xi^{n+1} e^{ik(m-1)h} + \xi^{n} e^{ik(m-1)h} \right)
+\xi^{m+1} e^{iknh} - \xi^{m} e^{iknh} =
+    \frac{D_u k}{2h^2} \left(
+        \xi^{m+1} e^{ik(n+1)h} + \xi^{m} e^{ik(n+1)h} \right. \\
+        - 2 \xi^{m+1} e^{iknh} - 2 \xi^{m} e^{iknh} \\
+        \left. + \xi^{m+1} e^{ik(n-1)h} + \xi^{m} e^{ik(n-1)h} \right)
 \end{split}
 \end{align}
 
-We may then divide throughout by $\xi^{n} e^{ikmh}$ which gives the following:
+We may then divide throughout by $\xi^{m} e^{iknh}$ which gives the following:
 
 \begin{align} \label{eq:stab_divided}
-\xi - 1 &= \frac{D_u \tau}{2h^2} \left(
+\xi - 1 &= \frac{D_u k}{2h^2} \left(
     \xi e^{ikh} + e^{ikh} - 2 \xi - 2 + \xi e^{-ikh} + e^{-ikh}
     \right)
 \end{align}
 
-Rearranging \eqref{eq:stab_divided} and replacing the complex exponential with
-the trigonometric identity gives us:
+Rearranging \eqref{eq:stab_divided} and replacing the complex exponential gives:
 
 \begin{align} \label{eq:stab_trig}
 \xi &= 1  - \frac{D_u \tau}{2h^2} (\xi + 1) [1 - \cos(kh)]
 \end{align}
 
-When we take the absolute value of \eqref{eq:stab_trig} to following inequality
-holds $\forall \tau \in R$.
+Taking the absolute value of $\xi$ gives:
 
 \begin{align} \label{eq:stab_abs}
 | \xi | &= \left|
@@ -51,5 +49,5 @@ holds $\forall \tau \in R$.
     \right| \leq 1
 \end{align}
 
-Since \eqref{eq:stab_abs} is true for any $\tau$ the Crank-Nicolson model is
-unconditionally stable.
+Since \eqref{eq:stab_abs} is true for any value of $k$ the Crank-Nicolson model
+is unconditionally stable.
