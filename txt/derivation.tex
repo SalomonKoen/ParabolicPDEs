@@ -1,121 +1,123 @@
 \section{Derivation}
 
 From the problem statement we have the following system of PDEs.
-
 \begin{subequations} \label{eq:system}
 \begin{align}
     u_t &= D_u u_{xx} + f(u,v) \label{eq:prey} \\
     v_t &= D_v v_{xx} + g(u,v) \label{eq:pred}
 \end{align}
 \end{subequations}
-
-where
-
+where $a \leq x \leq b$, $0 \leq t \leq T$, and
 \begin{subequations}
-\begin{align*}
+\begin{align}
     f(u,v) &= u(1-u) - \frac{auv}{1+\lambda u} \\
     g(u,v) &= - \frac{v}{ab} + \frac{auv}{b(1+\lambda u)}
-\end{align*}
-\end{subequations}
-
-We use the following finite difference approximations, derived from the
-Taylor series expansion, in place of the $u_t$, $u_{xx}$, $v_t$, and
-$v_{xx}$ in equations \eqref{eq:system}.
-
-\begin{subequations} \label{eq:taylor}
-\begin{align}
-    u_t &= \frac{u(x,t+k)-u(x,t)}{k} - \frac{k}{2} u_{tt}(x,\tau) \label{eq:u_t} \\
-    v_t &= \frac{v(x,t+k)-v(x,t)}{k} - \frac{k}{2} v_{tt}(x,\sigma) \label{eq:v_t}
-    \\
-    u_{xx} &= \frac{u(x-h,t)-2u(x,t)+u(x+h,t)}{h^2} - \frac{h^2}{12} u_{xxxx}(\xi,t) \label{eq:u_xx} \\
-    v_{xx} &= \frac{v(x-h,t)-2v(x,t)+v(x+h,t)}{h^2} - \frac{h^2}{12} v_{xxxx}(\epsilon,t) \label{eq:v_xx}
 \end{align}
 \end{subequations}
 
-By discarding the truncation terms from equations \eqref{eq:taylor} and letting
-$U_{i,j}$ and $V_{i,j}$ approximate the true solutions $u(x_i,t_j)$ and
-$v(x_i,t_j)$ respectively we can replace equations \eqref{eq:system} with the
-following system of equations. We write $f(u_i^j,v_i^j)) = f_i^j$ and
-$g(u_i^j,v_i^j)) = g_i^j$.
+We use the following finite difference approximations, derived from the Taylor
+series expansion, in place of the $u_t$, $u_{xx}$, $v_t$, and $v_{xx}$ in
+equations \eqref{eq:system}. The spacial and temporal domains are descretized
+using $N$ and $M$ points respectively and $h$ and $k$ are the related step
+lengths.
+\begin{subequations} \label{eq:taylor}
+\begin{align}
+    u_t &= \frac{u(x,t+k)-u(x,t)}{k} - \frac{k}{2} u_{tt}(x,\tau) \label{eq:u_t}
+    \\
+    v_t &= \frac{v(x,t+k)-v(x,t)}{k} - \frac{k}{2} v_{tt}(x,\sigma) \label{eq:v_t}
+    \\
+    u_{xx} &= \frac{u(x-h,t)-2u(x,t)+u(x+h,t)}{h^2} -
+        \frac{h^2}{12} u_{xxxx}(\xi,t) \label{eq:u_xx}
+    \\
+    v_{xx} &= \frac{v(x-h,t)-2v(x,t)+v(x+h,t)}{h^2} -
+        \frac{h^2}{12} v_{xxxx}(\epsilon,t) \label{eq:v_xx}
+\end{align}
+\end{subequations}
 
+Let $n = 1 \dots N$ and $m = 1 \dots M$. Discard the truncation terms from
+equations \eqref{eq:taylor} and let $U_n^m$ and $V_n^m$ approximate the true
+solutions $u(x_n,t_m)$ and $v(x_n,t_m)$.  We can then replace equations
+\eqref{eq:system} with the following system of equations. We also write
+$f(u_n^m,v_n^m)) = f_n^m$ and $g(u_n^m,v_n^m)) = g_n^m$.
 \begin{subequations} \label{eq:approx_sys}
 \begin{align}
-    \frac{U_{i}^{j+1} - U_{i}^{j}}{k} &=
+    \frac{U_{n}^{m+1} - U_{n}^{m}}{k} &=
         \frac{D_u}{2} \left\{
-            \left[ \frac{U_{i-1}^{j+1}-2U_{i}^{j+1}+U_{i+1}^{j+1}}{h^2} \right] +
-            \left[ \frac{U_{i-1}^{j}-2U_{i}^{j}+U_{i+1}^{j}}{h^2} \right]
-        \right\} + f_{i}^{j} \label{eq:approx_prey}
+            \left[ \frac{U_{n-1}^{m+1}-2U_{n}^{m+1}+U_{n+1}^{m+1}}{h^2} \right] +
+            \left[ \frac{U_{n-1}^{m}-2U_{n}^{m}+U_{n+1}^{m}}{h^2} \right]
+        \right\} + f_{n}^{m} \label{eq:approx_prey}
         \\
-    \frac{V_{i}^{j+1} - V_{i}^{j}}{k} &=
+    \frac{V_{n}^{m+1} - V_{n}^{m}}{k} &=
         \frac{D_v}{2} \left\{
-            \left[ \frac{V_{i-1}^{j+1}-2V_{i}^{j+1}+V_{i+1}^{j+1}}{h^2} \right] +
-            \left[ \frac{V_{i-1}^{j}-2V_{i}^{j}+V_{i+1}^{j}}{h^2} \right]
-        \right\} + g_{i}^{j} \label{eq:approx_pred}
+            \left[ \frac{V_{n-1}^{m+1}-2V_{n}^{m+1}+V_{n+1}^{m+1}}{h^2} \right] +
+            \left[ \frac{V_{n-1}^{m}-2V_{n}^{m}+V_{n+1}^{m}}{h^2} \right]
+        \right\} + g_{n}^{m} \label{eq:approx_pred}
 \end{align}
 \end{subequations}
 
 Multiplying equations \eqref{eq:approx_sys} throughout by $2k$ and rearranging
 the terms yields the following with $r = D_u k / h^2$ and $s = D_v k / h^2$.
-
 \begin{subequations} \label{eq:rearranged_approx_sys}
 \begin{align}
-    (2+2r) U_{i}^{j+1} - r U_{i-1}^{j+1} - r U_{i+1}^{j+1} &=
-        (2-2r) U_{i}^{j} + r U_{i-1}^{j} + r U_{i+1}^{j} + 2k f_{i}^{j}
+    (2+2r) U_{n}^{m+1} - r U_{n-1}^{m+1} - r U_{n+1}^{m+1} &=
+        (2-2r) U_{n}^{m} + r U_{n-1}^{m} + r U_{n+1}^{m} + 2k f_{n}^{m}
         \\
-    (2+2s) V_{i}^{j+1} - s V_{i-1}^{j+1} - s V_{i+1}^{j+1} &=
-        (2-2s) V_{i}^{j} + s V_{i-1}^{j} + s V_{i+1}^{j} + 2k g_{i}^{j}
+    (2+2s) V_{n}^{m+1} - s V_{n-1}^{m+1} - s V_{n+1}^{m+1} &=
+        (2-2s) V_{n}^{m} + s V_{n-1}^{m} + s V_{n+1}^{m} + 2k g_{n}^{m}
 \end{align}
 \end{subequations}
 
-
-We now investigate the boundary conditions. When $i=0$ we have may use the
+We now investigate the boundary conditions. When $n=1$ we have may use the
 central difference formula for the first derivatives as follows:
-
 \begin{subequations}
 \begin{align}
-    \frac{\partial U_{0}^{j+1}}{\partial x} &\approx \frac{{U_1}^{j+1} - U_{-1}^{j+1}}{2h} \\
-    \frac{\partial V_{0}^{j+1}}{\partial x} &\approx \frac{{V_1}^{j+1} - V_{-1}^{j+1}}{2h}
+    U_x(a,t) &= 0 = \frac{{U_2} - U_{0}}{2h} \\
+    V_x(a,t) &= 0 = \frac{{V_2} - V_{0}}{2h}
 \end{align}
 \end{subequations}
 
 Since the derivatives at the boundaries are given as 0 this implies that:
-
-\begin{subequations}
+\begin{subequations} \label{eq:left_end_points}
 \begin{align}
-    U_{1}^{j+1} &= U_{-1}^{j+1} \\
-    V_{1}^{j+1} &= V_{-1}^{j+1}
+    U_{2} &= U_{0} \\
+    V_{2} &= V_{0}
 \end{align}
 \end{subequations}
 
-The same argument follows for the right endpoint where $i=N$ and we have:
-
+The same argument follows for the right endpoint where $n=N$ and we have:
 \begin{subequations}
 \begin{align}
-    U_{N-1}^{j+1} &= U_{N-1}^{j+1} \\
-    V_{N+1}^{j+1} &= V_{N-1}^{j+1}
+    U_x(b,t) &= 0 = \frac{{U_{N+1}} - U_{N-1}}{2h} \\
+    V_x(b,t) &= 0 = \frac{{V_{N+1}} - V_{N-1}}{2h}
+\end{align}
+\end{subequations}
+hence
+\begin{subequations} \label{eq:right_end_points}
+\begin{align}
+    U_{N+1} &= U_{N-1} \\
+    V_{N+1} &= V_{N-1}
 \end{align}
 \end{subequations}
 
-We may then substitute these into their respective equations so that:
-
+We may then substitute \eqref{eq:left_end_points} and
+\eqref{eq:right_end_points} into their respective equations from
+\eqref{eq:rearranged_approx_sys} so that:
 \begin{subequations} \label{eq:rearranged_approx_sys_endpoints}
 \begin{align}
-    (2+2r) U_{0}^{j+1} - 2r U_{1}^{j+1} &=
-        (2-2r) U_{0}^{j} + 2r U_{1}^{j} + 2k f_{i}^{j}
+    (2+2r) U_{1}^{m+1} - 2r U_{2}^{m+1} &=
+        (2-2r) U_{1}^{m} + 2r U_{2}^{m} + 2k f_{1}^{m}
         \\
-    (2+2s) V_{0}^{j+1} - 2s V_{1}^{j+1} &=
-        (2-2s) V_{0}^{j} + 2s V_{1}^{j} + 2k g_{i}^{j}
+    (2+2s) V_{1}^{m+1} - 2s V_{2}^{m+1} &=
+        (2-2s) V_{1}^{m} + 2s V_{2}^{m} + 2k g_{1}^{m}
         \\
-    (2+2r) U_{N}^{j+1} - 2r U_{N-1}^{j+1} &=
-        (2-2r) U_{N}^{j} + 2r U_{N-1}^{j} + 2k f_{i}^{j}
+    (2+2r) U_{N}^{m+1} - 2r U_{N-1}^{m+1} &=
+        (2-2r) U_{N}^{m} + 2r U_{N-1}^{m} + 2k f_{N}^{m}
         \\
-    (2+2s) V_{N}^{j+1} - 2s V_{N-1}^{j+1} &=
-        (2-2s) V_{N}^{j} + 2s V_{N-1}^{j} + 2k g_{i}^{j}
+    (2+2s) V_{N}^{m+1} - 2s V_{N-1}^{m+1} &=
+        (2-2s) V_{N}^{m} + 2s V_{N-1}^{m} + 2k g_{N}^{m}
 \end{align}
 \end{subequations}
-
-These systems may be rewritten into the following matrix equations:
-
+rewritten into the following matrix equations:
 \begin{align*}
 \begin{bmatrix}
     2+2r   & -2r    & \dots  & 0 \\
@@ -125,11 +127,11 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & -2r    & 2+2r
 \end{bmatrix}
 \begin{bmatrix}
-    U_1^{j+1} \\
-    U_2^{j+1} \\
-    U_3^{j+1} \\
+    U_1^{m+1} \\
+    U_2^{m+1} \\
+    U_3^{m+1} \\
     \vdots    \\
-    U_n^{j+1}
+    U_n^{m+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
@@ -140,18 +142,18 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & 2r     & 2-2r
 \end{bmatrix}
 \begin{bmatrix}
-    U_1^{j} \\
-    U_2^{j} \\
-    U_3^{j} \\
+    U_1^{m} \\
+    U_2^{m} \\
+    U_3^{m} \\
     \vdots  \\
-    U_n^{j}
+    U_n^{m}
 \end{bmatrix} + 2k
 \begin{bmatrix}
-    f_1^{j} \\
-    f_2^{j} \\
-    f_3^{j} \\
+    f_1^{m} \\
+    f_2^{m} \\
+    f_3^{m} \\
     \vdots  \\
-    f_n^{j}
+    f_n^{m}
 \end{bmatrix} \\[10pt]
 \begin{bmatrix}
     2+2s   & -2s    & \dots  & 0 \\
@@ -161,11 +163,11 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & -2s    & 2+2s
 \end{bmatrix}
 \begin{bmatrix}
-    V_1^{j+1} \\
-    V_2^{j+1} \\
+    V_1^{m+1} \\
+    V_2^{m+1} \\
     V_3^{j+1} \\
     \vdots    \\
-    V_n^{j+1}
+    V_n^{m+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
@@ -176,17 +178,17 @@ These systems may be rewritten into the following matrix equations:
     0      & 0      & 2s     & 2-2s
 \end{bmatrix}
 \begin{bmatrix}
-    V_1^{j} \\
-    V_2^{j} \\
-    V_3^{j} \\
+    V_1^{m} \\
+    V_2^{m} \\
+    V_3^{m} \\
     \vdots  \\
-    V_n^{j}
+    V_n^{m}
 \end{bmatrix} + 2k
 \begin{bmatrix}
-    g_1^{j} \\
-    g_2^{j} \\
-    g_3^{j} \\
+    g_1^{m} \\
+    g_2^{m} \\
+    g_3^{m} \\
     \vdots  \\
-    g_n^{j}
+    g_n^{m}
 \end{bmatrix}
 \end{align*}
