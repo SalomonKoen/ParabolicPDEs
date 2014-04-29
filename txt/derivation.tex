@@ -3,15 +3,10 @@
 From the problem statement we have the following system of PDEs.
 \begin{subequations} \label{eq:system}
 \begin{align}
-    u_t &= D_u u_{xx} + f(u,v) \label{eq:prey} \\
-    v_t &= D_v v_{xx} + g(u,v) \label{eq:pred}
-\end{align}
-\end{subequations}
-where $a \leq x \leq b$, $0 \leq t \leq T$, and
-\begin{subequations}
-\begin{align}
-    f(u,v) &= u(1-u) - \frac{auv}{1+\lambda u} \\
-    g(u,v) &= - \frac{v}{ab} + \frac{auv}{b(1+\lambda u)}
+    u_t &= D_u u_{xx} + u \left( 1 - u - \frac{av}{1+\lambda u} \right) \label{eq:prey} \\
+    v_t &= D_v v_{xx} - v \left( \frac{1}{ab} - \frac{au}{b(1+\lambda u)} \right) \label{eq:pred} \\
+    \notag\\
+        &  a \leq x \leq b$, $0 \leq t \leq T \notag
 \end{align}
 \end{subequations}
 
@@ -36,34 +31,70 @@ lengths.
 
 Let $n = 1 \dots N$ and $m = 1 \dots M$. Discard the truncation terms from
 equations \eqref{eq:taylor} and let $U_n^m$ and $V_n^m$ approximate the true
-solutions $u(x_n,t_m)$ and $v(x_n,t_m)$.  We can then replace equations
-\eqref{eq:system} with the following system of equations. We also write
-$f(u_n^m,v_n^m)) = f_n^m$ and $g(u_n^m,v_n^m)) = g_n^m$.
+solutions $u(x_n,t_m)$ and $v(x_n,t_m)$. The initial $u$ and $v$ in the source
+terms from \eqref{eq:system} are replaced with the central differences:
+\begin{subequations} \label{eq:source_term_approx}
+\begin{align}
+    u &= \frac{U_n^{m+1} + U_n^m}{2} \\
+    v &= \frac{V_n^{m+1} + V_n^m}{2}
+\end{align}
+\end{subequations}
+
+We can then replace equations \eqref{eq:system} with the following system of
+equations.
 \begin{subequations} \label{eq:approx_sys}
 \begin{align}
     \frac{U_{n}^{m+1} - U_{n}^{m}}{k} &=
         \frac{D_u}{2} \left\{
-            \left[ \frac{U_{n-1}^{m+1}-2U_{n}^{m+1}+U_{n+1}^{m+1}}{h^2} \right] +
+           \left[ \frac{U_{n-1}^{m+1}-2U_{n}^{m+1}+U_{n+1}^{m+1}}{h^2} \right] +
             \left[ \frac{U_{n-1}^{m}-2U_{n}^{m}+U_{n+1}^{m}}{h^2} \right]
-        \right\} + f_{n}^{m} \label{eq:approx_prey}
+        \right\} \notag\\
+        &+ \left[ \frac{U_n^{m+1} + U_n^m}{2} \right]
+           \left[ 1 - U_n^m - \frac{a V_n^m}{1 + \lambda U_n^m} \right]
+           \label{eq:approx_prey}
+        \\ \notag
         \\
     \frac{V_{n}^{m+1} - V_{n}^{m}}{k} &=
         \frac{D_v}{2} \left\{
-            \left[ \frac{V_{n-1}^{m+1}-2V_{n}^{m+1}+V_{n+1}^{m+1}}{h^2} \right] +
-            \left[ \frac{V_{n-1}^{m}-2V_{n}^{m}+V_{n+1}^{m}}{h^2} \right]
-        \right\} + g_{n}^{m} \label{eq:approx_pred}
+           \left[ \frac{V_{n-1}^{m+1}-2V_{n}^{m+1}+V_{n+1}^{m+1}}{h^2} \right] +
+           \left[ \frac{V_{n-1}^{m}-2V_{n}^{m}+V_{n+1}^{m}}{h^2} \right]
+        \right\} \notag\\
+        &- \left[ \frac{V_n^{m+1} + V_n^m}{2} \right]
+           \left[ \frac{1}{ab} - \frac{a U_n^m}{b ( 1 + \lambda U_n^m )} \right]
+           \label{eq:approx_pred}
 \end{align}
 \end{subequations}
 
 Multiplying equations \eqref{eq:approx_sys} throughout by $2k$ and rearranging
-the terms yields the following with $r = D_u k / h^2$ and $s = D_v k / h^2$.
+the terms such that all the $U^{m+1}$ and $V^{m+1}$ terms are taken to the LHS
+yields the following with $r = D_u k / h^2$ and $s = D_v k / h^2$:
 \begin{subequations} \label{eq:rearranged_approx_sys}
 \begin{align}
-    (2+2r) U_{n}^{m+1} - r U_{n-1}^{m+1} - r U_{n+1}^{m+1} &=
-        (2-2r) U_{n}^{m} + r U_{n-1}^{m} + r U_{n+1}^{m} + 2k f_{n}^{m}
-        \\
-    (2+2s) V_{n}^{m+1} - s V_{n-1}^{m+1} - s V_{n+1}^{m+1} &=
-        (2-2s) V_{n}^{m} + s V_{n-1}^{m} + s V_{n+1}^{m} + 2k g_{n}^{m}
+    -r U_{n-1}^{m+1} +
+    \left(
+        k + 2r + k U_n^m + \frac{a k V_n^m}{1 + \lambda U_n^m}
+    \right)
+    U_n^{m+1} - r U_{n+1}^{m+1} \notag
+    \\
+    = r U_{n-1}^m +
+    \left(
+        3k - 2r - k U_n^m - \frac{a k V_n^m}{1 + \lambda U_n^m}
+    \right)
+    U_n^m + r U_{n+1}^m
+    \\
+    \notag
+    \\
+    -r V_{n-1}^{m+1} +
+    \left(
+        2k + 2r + \frac{k}{ab} - \frac{a k U_n^m}{b ( 1 + \lambda U_n^m )}
+    \right)
+    V_n^{m+1} - r V_{n+1}^{m+1} \notag
+    \\
+    = r V_{n-1}^m +
+    \left(
+        2k - 2r - \frac{k}{ab} + \frac{a k U_n^m}{b ( 1 + \lambda U_n^m )}
+    \right)
+    V_n^m + r V_{n+1}^m
 \end{align}
 \end{subequations}
 
@@ -91,7 +122,7 @@ The same argument follows for the right endpoint where $n=N$ and we have:
     V_x(b,t) &= 0 = \frac{{V_{N+1}} - V_{N-1}}{2h}
 \end{align}
 \end{subequations}
-hence
+hence we find that
 \begin{subequations} \label{eq:right_end_points}
 \begin{align}
     U_{N+1} &= U_{N-1} \\
@@ -104,91 +135,114 @@ We may then substitute \eqref{eq:left_end_points} and
 \eqref{eq:rearranged_approx_sys} so that:
 \begin{subequations} \label{eq:rearranged_approx_sys_endpoints}
 \begin{align}
-    (2+2r) U_{1}^{m+1} - 2r U_{2}^{m+1} &=
-        (2-2r) U_{1}^{m} + 2r U_{2}^{m} + 2k f_{1}^{m}
-        \\
-    (2+2s) V_{1}^{m+1} - 2s V_{2}^{m+1} &=
-        (2-2s) V_{1}^{m} + 2s V_{2}^{m} + 2k g_{1}^{m}
-        \\
-    (2+2r) U_{N}^{m+1} - 2r U_{N-1}^{m+1} &=
-        (2-2r) U_{N}^{m} + 2r U_{N-1}^{m} + 2k f_{N}^{m}
-        \\
-    (2+2s) V_{N}^{m+1} - 2s V_{N-1}^{m+1} &=
-        (2-2s) V_{N}^{m} + 2s V_{N-1}^{m} + 2k g_{N}^{m}
+    \left(
+        k + 2r + k U_1^m + \frac{a k V_1^m}{1 + \lambda U_1^m}
+    \right)
+    U_{1}^{m+1} - 2r U_{2}^{m+1} &=
+    \left(
+        3k - 2r - k U_1^m - \frac{a k V_1^m}{1 + \lambda U_1^m}
+    \right)
+    U_{1}^{m} + 2r U_{2}^{m}
+    \\
+    \left(
+        2k + 2r + \frac{k}{ab} - \frac{a k U_1^m}{b ( 1 + \lambda U_1^m )}
+    \right)
+    V_{1}^{m+1} - 2s V_{2}^{m+1} &=
+    \left(
+        2k - 2r - \frac{k}{ab} + \frac{a k U_1^m}{b ( 1 + \lambda U_1^m )}
+    \right)
+    V_{1}^{m} + 2s V_{2}^{m}
+    \\
+    \left(
+        k + 2r + k U_N^m + \frac{a k V_N^m}{1 + \lambda U_N^m}
+    \right)
+    U_{N}^{m+1} - 2r U_{N-1}^{m+1} &=
+    \left(
+        3k - 2r - k U_N^m - \frac{a k V_N^m}{1 + \lambda U_N^m}
+    \right)
+    U_{N}^{m} + 2r U_{N-1}^{m}
+    \\
+    \left(
+        2k + 2r + \frac{k}{ab} - \frac{a k U_N^m}{b ( 1 + \lambda U_N^m )}
+    \right)
+    V_{N}^{m+1} - 2s V_{N-1}^{m+1} &=
+    \left(
+        2k - 2r - \frac{k}{ab} + \frac{a k U_N^m}{b ( 1 + \lambda U_N^m )}
+    \right)
+    V_{N}^{m} + 2s V_{N-1}^{m}
 \end{align}
 \end{subequations}
-rewritten into the following matrix equations:
+
+rewritten into the following matrix equations where:
+\begin{subequations*}
+\begin{align*}
+    L_u &= k + 2r + k U_n^m + \frac{a k V_n^m}{1 + \lambda U_n^m}
+    \\
+    R_u &= 3k - 2r - k U_n^m - \frac{a k V_n^m}{1 + \lambda U_n^m}
+    \\
+    L_v &= 2k + 2r + \frac{k}{ab} - \frac{a k U_n^m}{b ( 1 + \lambda U_n^m )}
+    \\
+    R_v &= 2k - 2r - \frac{k}{ab} + \frac{a k U_n^m}{b ( 1 + \lambda U_n^m )}
+\end{align}
+\end{subequations}
+
 \begin{align*}
 \begin{bmatrix}
-    2+2r   & -2r    & \dots  & 0 \\
-    -r     & 2+2r   & \dots  & 0 \\
-    0      & -r     & \ddots & \vdots \\
-    \vdots & \vdots & \ddots & -r   \\
-    0      & 0      & -2r    & 2+2r
+    L_u    & -2r    & \dots  & \dots  & 0 \\
+    -r     & L_u    & -r     & \ddots & \vdots \\
+    0      & \ddots & L_u    & \ddots & \vdots \\
+    \vdots & \ddots & \ddots & \ddots & -r   \\
+    0      & \dots  & \dots  & -2r    & L_u
 \end{bmatrix}
 \begin{bmatrix}
-    U_1^{m+1} \\
-    U_2^{m+1} \\
-    U_3^{m+1} \\
-    \vdots    \\
+    U_1^{m+1}     \\
+    U_2^{m+1}     \\
+    U_3^{m+1}     \\
+    \vdots        \\
     U_n^{m+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
-    2-2r   & 2r     & \dots  & 0 \\
-    r      & 2-2r   & \dots  & 0 \\
-    0      & r      & \ddots & \vdots \\
-    \vdots & \vdots & \ddots & r   \\
-    0      & 0      & 2r     & 2-2r
+    R_u    & 2r     & \dots  & \dots  & 0      \\
+    r      & R_u    & r      & \ddots & \vdots \\
+    0      & \ddots & R_u    & \ddots & \vdots \\
+    \vdots & \ddots & \ddots & \ddots & r      \\
+    0      & \dots  & \dots  & 2r     & R_u
 \end{bmatrix}
 \begin{bmatrix}
     U_1^{m} \\
     U_2^{m} \\
     U_3^{m} \\
     \vdots  \\
-    U_n^{m}
-\end{bmatrix} + 2k
-\begin{bmatrix}
-    f_1^{m} \\
-    f_2^{m} \\
-    f_3^{m} \\
-    \vdots  \\
-    f_n^{m}
+    U_N^{m}
 \end{bmatrix} \\[10pt]
 \begin{bmatrix}
-    2+2s   & -2s    & \dots  & 0 \\
-    -s     & 2+2s   & \dots  & 0 \\
-    0      & -s     & \ddots & \vdots \\
-    \vdots & \vdots & \ddots & -s   \\
-    0      & 0      & -2s    & 2+2s
+    L_v   & -2s     & \dots  & \dots  & 0       \\
+    -s     & L_v    & -s     & \ddots & \vdots  \\
+    0      & \ddots & L_v    & \ddots & \vdots  \\
+    \vdots & \ddots & \ddots & \ddots & -s      \\
+    0      & \dots  & \dots  & -2s    & L_v
 \end{bmatrix}
 \begin{bmatrix}
-    V_1^{m+1} \\
-    V_2^{m+1} \\
-    V_3^{j+1} \\
-    \vdots    \\
+    V_1^{m+1}     \\
+    V_2^{m+1}     \\
+    V_3^{j+1}     \\
+    \vdots        \\
     V_n^{m+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
-    2-2s   & 2s     & \dots  & 0 \\
-    s      & 2-2s   & \dots  & 0 \\
-    0      & s      & \ddots & \vdots \\
-    \vdots & \vdots & \ddots & s   \\
-    0      & 0      & 2s     & 2-2s
+    R_v    & 2s     & \dots  & \dots  & 0 \\
+    s      & R_v    & s      & \dots  & 0 \\
+    0      & \ddots & R_v    & \ddots & \vdots \\
+    \vdots & \ddots & \ddots & \ddots & s   \\
+    0      & \dots  & \dots  & 2s     & R_v
 \end{bmatrix}
 \begin{bmatrix}
-    V_1^{m} \\
-    V_2^{m} \\
-    V_3^{m} \\
-    \vdots  \\
+    V_1^{m}     \\
+    V_2^{m}     \\
+    V_3^{m}     \\
+    \vdots      \\
     V_n^{m}
-\end{bmatrix} + 2k
-\begin{bmatrix}
-    g_1^{m} \\
-    g_2^{m} \\
-    g_3^{m} \\
-    \vdots  \\
-    g_n^{m}
 \end{bmatrix}
 \end{align*}
