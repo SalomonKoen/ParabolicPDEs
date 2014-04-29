@@ -22,7 +22,7 @@ function varargout = Project(varargin)
 
 % Edit the above text to modify the response to help Project
 
-% Last Modified by GUIDE v2.5 29-Apr-2014 18:18:24
+% Last Modified by GUIDE v2.5 29-Apr-2014 19:23:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -208,18 +208,18 @@ end
 
 
 
-function edtDV_Callback(hObject, eventdata, handles)
-% hObject    handle to edtDV (see GCBO)
+function edtDv_Callback(hObject, eventdata, handles)
+% hObject    handle to edtDv (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edtDV as text
-%        str2double(get(hObject,'String')) returns contents of edtDV as a double
+% Hints: get(hObject,'String') returns contents of edtDv as text
+%        str2double(get(hObject,'String')) returns contents of edtDv as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edtDV_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edtDV (see GCBO)
+function edtDv_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edtDv (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -442,7 +442,15 @@ function pbSolve_Callback(hObject, eventdata, handles)
 % hObject    handle to pbSolve (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+du = str2num(get(handles.edtDu, 'String'));
+dv = str2num(get(handles.edtDv, 'String'));
+a = str2num(get(handles.edtA, 'String'));
+b = str2num(get(handles.edtB, 'String'));
+xn = str2num(get(handles.edtX, 'String'));
+tn = str2num(get(handles.edtT, 'String'));
+k = str2num(get(handles.edtK, 'String'));
+ua = str2num(get(handles.edtUXa, 'String'));
+ub = str2num(get(handles.edtUXb, 'String'));
 
 % --- Executes on button press in pbCancel.
 function pbCancel_Callback(hObject, eventdata, handles)
