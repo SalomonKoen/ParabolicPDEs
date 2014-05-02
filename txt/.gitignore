@@ -4,4 +4,3 @@ build/*
 *.fls
 *.toc
 *.fdb_latexmk
-*.pdf
