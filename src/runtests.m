@@ -3,52 +3,36 @@ function [] = runtests()
 %   Each test should be written in a seperate subfunction
 %   in this file.
 
-for i = 1:5
-    n = randi([100 500]); % Size of matrix.
-    test_tridiag_build(n);
-    test_tridiag_solver(n,1e-8);
-end
+clear; clc; % Clean workspace first.
+
+test_solve_systems();
 
 end
 
-function [success] = test_tridiag_build(n)
-% Check if a matrix is tridiagonal.
+function [success] = test_solve_systems()
+
+% Parameters are very sensitive.
+D_u = 0.09;
+D_v = 0.2;
+a   = 3;
+b   = 1;
+L   = 1;
+a_x = 0;
+b_x = 3;
+M   = 1000;
+N   = 35;
+k   = 0.009;
+F   = @(x) 1+x*0.1; % Watch out for negative values here.
+G   = @(x) 0.9-0.4*x; % And here. "a_x" and "b_x" should be chosen carefully.
+
+[UU, VV] = solve_systems(D_u, D_v, a, b, L, a_x, b_x, M, N, k, F, G);
+
+rotate3d on
+hold on
+surf(UU, 'EdgeColor', 'none')
+surf(VV, 'EdgeColor', 'none')
+hold off
+
 success = true;
-
-% Initialise data.
-A = build_matrix(rand(), rand(), rand(), n);
-
-% Check that all entries off the main, upper, and lower diags are 0.
-for i = 1:n
-    for j = 1:n
-        if i < (j-1) || i > (j+1)
-            if A(i,j) ~= 0
-                warning('"test_tridiag_build" failed.');
-                success = false;
-                return;
-            end
-        end
-    end
-end
-
-end
-
-function [success] = test_tridiag_solver(n,tol)
-% Compare thomas algorithm to matlab's "\" function.
-success = true;
-
-% Initialise data.
-A = 2*speye(n) - build_matrix(rand(), rand(), rand(), n); % 2I-A
-b = rand(n,1); % TODO: write "build_bvector" function and use here.
-
-% Time each method.
-tic; x_real = A \ b; toc;
-tic; x_test = tridiag_solver(A,b); toc;
-
-if abs(x_real - x_test) > tol
-    warning('"test_tridiag_solver" failed.');
-    success = false;
-    return;
-end
 
 end
